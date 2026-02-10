@@ -136,7 +136,10 @@ unsafe impl<E: Source> ArchiveContext<E> for ArchiveValidator<'_> {
     ) -> Result<(), E> {
         let start = ptr as usize;
         let end = ptr.wrapping_add(layout.size()) as usize;
-        if start < self.subtree_range.start || end > self.subtree_range.end {
+        if end < start
+            || start < self.subtree_range.start
+            || end > self.subtree_range.end
+        {
             fail!(InvalidSubtreePointer {
                 address: start,
                 size: layout.size(),
